@@ -1,0 +1,35 @@
+09.17 12:01 AM
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Location Test</title>
+</head>
+<body>
+  <h2>Location Test</h2>
+  <button onclick="getLocation()">Share My Location</button>
+  <p id="result"></p>
+  <script>
+    function getLocation() {
+      if (!navigator.geolocation) {
+        document.getElementById("result").innerText =
+          "Geolocation is not supported.";
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          document.getElementById("result").innerHTML =
+            "Latitude: " + lat + "<br>" +
+            "Longitude: " + lon;
+        },
+        function(error) {
+          document.getElementById("result").innerText =
+            "Location permission denied or unavailable.";
+        }
+      );
+    }
+  </script>
+</body>
+</html>
+
